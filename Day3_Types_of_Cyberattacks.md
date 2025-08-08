@@ -1,5 +1,5 @@
 # 🐛 Day 3: Types of Cyberattacks  
-*Part of the [30-Day SOC Level 1 Series](../index.md)*
+*Part of the [30-Day SOC Level 1 Series](https://cyber-security-center.github.io/SOC-30Days-Series/)*
 
 ## 📘 Key Attack Types & Definitions
 

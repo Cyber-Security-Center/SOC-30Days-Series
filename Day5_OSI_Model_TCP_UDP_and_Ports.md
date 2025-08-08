@@ -1,5 +1,5 @@
 # 🛡️ Day 5: OSI Model, TCP/UDP & Ports
-*Part of the [30-Day SOC Level 1 Series](../index.md)*
+*Part of the [30-Day SOC Level 1 Series](https://cyber-security-center.github.io/SOC-30Days-Series/)*
 
 Today we dive deeper into how data moves across networks and how SOC analysts use this knowledge to detect threats. Understanding the OSI model, TCP/UDP protocols, and ports is essential for analyzing network traffic and identifying malicious behavior.
 
