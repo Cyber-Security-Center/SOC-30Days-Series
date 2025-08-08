@@ -1,4 +1,5 @@
 # 🛡️ Day 4: Networking and Security Concepts & IP Addressing
+*Part of the [30-Day SOC Level 1 Series](../index.md)*
 
 Understanding how devices communicate over networks is essential for any SOC analyst. Today’s module covers the foundational networking concepts and IP addressing schemes that help analysts detect and respond to threats effectively.
 

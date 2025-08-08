@@ -1,4 +1,5 @@
 ## 🧬 Network Data in OSI & TCP/IP Layers
+*Part of the [30-Day SOC Level 1 Series](../index.md)*
 
 Understanding what kind of data is handled at each OSI (and TCP/IP) layer is crucial for SOC analysts. Each layer adds or interprets specific information in a network packet, and certain fields are especially important for threat detection.
 
