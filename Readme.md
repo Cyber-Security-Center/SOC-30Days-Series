@@ -11,6 +11,6 @@ Whether you're just starting out or transitioning into cybersecurity, this serie
 3. [Day 3: Types of Cyberattacks](Day3_Types_of_Cyberattacks.md)
 4. [Day 4: Networking Security Concepts and IP Addressing](Day4_Networking_Security_Concepts_and_IP_Addressing.md)
 5. [Day 5: OSI Model, TCP/UDP, and Ports](Day5_OSI_Model_TCP_UDP_and_Ports.md)
-6. [Day 6: Network Packets](Day6_Network_Packets.md)
+6. [Day 6: Networking and Packets](Day6_Networking_and_Packets.md)
 
 Stay tuned for more daily lessons!
