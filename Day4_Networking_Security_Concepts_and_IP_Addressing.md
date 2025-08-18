@@ -502,9 +502,20 @@ _“Firewalls are security guards at the gate, IDS/IPS are surveillance cameras,
 ### ⬇️ Inbound Traffic Flow
 > *Traffic from external users (🌐) reaching a corporate server (🏢).*
 >
-> **Flow:** 🌐 ➡️ 🛡️ ➡️ 🕵️ ➡️ ⚖️ ➡️ 🖥️ ➡️ 🦠 ➡️ 🗄️
+<!-- > **Flow:** 🌐 ➡️ 🛡️ ➡️ 🕵️ ➡️ ⚖️ ➡️ 🖥️ ➡️ 🦠 ➡️ 🗄️ -->
 
-```mermaid
+
+- **⬇️ Inbound Steps:**
+  - 🌐 **Internet** ⟶ 🛡️ **Firewall** (blocks/permits traffic)
+  - 🛡️ **Firewall** ⟶ 🕵️ **IDS/IPS** (detects threats)
+  - 🕵️ **IDS/IPS** ⟶ ⚖️ **Load Balancer** (distributes load)
+  - ⚖️ **Load Balancer** ⟶ 🖥️ **Web Server** (serves requests)
+  - 🖥️ **Web Server** ⟶ 🦠 **EDR/Antivirus** (endpoint protection)
+  - 🖥️ **Web Server** ⟶ 🗄️ **DLP** (data loss prevention)
+
+![Inbound Traffic Flow](mermaid-diagram-2025-08-18-105030.png)
+
+<!-- ```mermaid
 flowchart LR
     Internet["🌐 Internet"]
     FW["🛡️ Firewall"]
@@ -514,21 +525,14 @@ flowchart LR
     EDR["🦠 EDR/Antivirus"]
     DLP["🗄️ DLP"]
 
-    Internet --> FW
-    FW --> IDS
-    IDS --> LB
-    LB --> Web
-    Web --> EDR
-    Web --> DLP
-```
+    Internet --&gt; FW
+    FW --&gt; IDS
+    IDS --&gt; LB
+    LB --&gt; Web
+    Web --&gt; EDR
+    Web --&gt; DLP
+``` -->
 
-- **⬇️ Inbound Steps:**
-  - 🌐 **Internet** ⟶ 🛡️ **Firewall** (blocks/permits traffic)
-  - 🛡️ **Firewall** ⟶ 🕵️ **IDS/IPS** (detects threats)
-  - 🕵️ **IDS/IPS** ⟶ ⚖️ **Load Balancer** (distributes load)
-  - ⚖️ **Load Balancer** ⟶ 🖥️ **Web Server** (serves requests)
-  - 🖥️ **Web Server** ⟶ 🦠 **EDR/Antivirus** (endpoint protection)
-  - 🖥️ **Web Server** ⟶ 🗄️ **DLP** (data loss prevention)
 
 #### 📚 Scenario: User Connecting to Our Server (Inbound Flow Explained Step-by-Step)
 
@@ -565,9 +569,19 @@ _This layered approach is called “Defense in Depth”—multiple controls work
 ### ⬆️ Outbound Traffic Flow
 > *Traffic from a corporate user machine (👤) accessing an external server (🌐).*  
 >
-> **Flow:** 👤 ➡️ 🕸️ ➡️ 🛡️ ➡️ 🌐 ➡️ 🖥️
+<!-- > **Flow:** 👤 ➡️ 🕸️ ➡️ 🛡️ ➡️ 🌐 ➡️ 🖥️ -->
 
-```mermaid
+
+- **⬆️ Outbound Steps:**
+  - 👤 **User Machine** ⟶ 🕸️ **Proxy** (filters/enforces policies)
+  - 🕸️ **Proxy** ⟶ 🛡️ **Firewall** (monitors outbound traffic)
+  - 🛡️ **Firewall** ⟶ 🌐 **Internet** (external access)
+  - 🌐 **Internet** ⟶ 🖥️ **Google Server** (destination)
+
+
+![Outbound Traffic Flow](mermaid-diagram-2025-08-18-110052.png)
+
+<!-- ```mermaid
 flowchart LR
     User["👤 User Machine"]
     Proxy["🕸️ Proxy"]
@@ -575,17 +589,11 @@ flowchart LR
     Internet["🌐 Internet"]
     Google["🖥️ Google Server"]
 
-    User --> Proxy
-    Proxy --> FW
-    FW --> Internet
-    Internet --> Google
-```
-
-- **⬆️ Outbound Steps:**
-  - 👤 **User Machine** ⟶ 🕸️ **Proxy** (filters/enforces policies)
-  - 🕸️ **Proxy** ⟶ 🛡️ **Firewall** (monitors outbound traffic)
-  - 🛡️ **Firewall** ⟶ 🌐 **Internet** (external access)
-  - 🌐 **Internet** ⟶ 🖥️ **Google Server** (destination)
+    User --&gt; Proxy
+    Proxy --&gt; FW
+    FW --&gt; Internet
+    Internet --&gt; Google
+``` -->
 
 #### 📚 Scenario: User Accessing an External Server (Outbound Flow Explained Step-by-Step)
 
@@ -611,6 +619,12 @@ At each step, logs are generated—proxies log user activity, firewalls log outb
 
 _This outbound flow ensures that user activity is filtered, monitored, and controlled before reaching the internet, providing multiple layers of defense._
 
+
+
+> - **Tip:** Use arrows (⬇️ for inbound/ingress/download, ⬆️ for outbound/egress/upload) to visualize traffic direction and data movement.
+>    - ⬇️ **Inbound / Ingress / Download:** Traffic entering the network or downloading data (e.g., external users accessing internal servers, files being downloaded).
+>    - ⬆️ **Outbound / Egress / Upload:** Traffic leaving the network or uploading data (e.g., internal users accessing external resources, files being uploaded).
+    - 
 ---
 
 ### 🛡️ Defense in Depth & SOC Monitoring
@@ -619,7 +633,6 @@ _This outbound flow ensures that user activity is filtered, monitored, and contr
 - **SIEM** (📊) collects logs/alerts from all devices for centralized monitoring and correlation.
 - **DLP** (🗄️) monitors for sensitive data exfiltration on outbound traffic.
 
-> **Tip:** Use arrows (⬇️ for inbound, ⬆️ for outbound) to visualize upload/download and traffic direction.
 
 
 
