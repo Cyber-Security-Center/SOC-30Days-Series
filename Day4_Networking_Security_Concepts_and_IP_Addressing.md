@@ -325,6 +325,188 @@ _“Firewalls are security guards at the gate, IDS/IPS are surveillance cameras,
 #### Common Security Devices
 #### Common Security Devices (with Details & Use Cases)
 
+
+<summary>Common Security Devices (with Details & Use Cases)</summary>
+
+- **Firewall**
+    <details>
+    <summary>Expand details</summary>
+    
+    - A device or software that monitors and filters incoming and outgoing network traffic based on security rules (ACLs).
+    - Works at Layer 3 (Network) and Layer 4 (Transport) of the OSI model.
+    - Performs stateful inspection and enforces an implicit deny rule by default.
+    - Can be hardware (e.g., Cisco ASA, Juniper, Fortigate) or software-based (e.g., Windows Firewall).
+    - Supports zone-to-zone, IP, and port-based filtering.
+    - Inline with network traffic, blocking or allowing connections as per policy.
+    - **Use Cases:**
+        - Detecting too many denied/allowed connections.
+        - Blocking traffic from suspicious countries.
+        - Monitoring firewall configuration changes.
+        - Investigating excessive VPN access failures.
+        - Identifying communication with known bad IPs.
+    - **Vendors:** **Cisco ASA**, **Juniper**, **Fortigate**, **Symantec**
+    - **Fields to investigate:**
+        - `src_ip` / `dst_ip`: Source and destination IP addresses involved in the connection.
+        - `src_port` / `dst_port`: Source and destination ports for identifying services.
+        - `action`: Indicates if the connection was allowed or denied.
+        - `protocol`: Protocol used (TCP, UDP, ICMP, etc.).
+        - `rule_id` or `policy_id`: The firewall rule or policy that triggered the log.
+        - `timestamp`: When the event occurred.
+        - `interface`: Network interface where the event was observed.
+    </details>
+
+- **IDS (Intrusion Detection System) / IPS (Intrusion Prevention System)**
+    <details>
+    <summary>Expand details</summary>
+    
+    - IDS monitors network traffic for suspicious activity and alerts analysts; IPS can actively block or prevent detected threats in real time.
+    - Performs deep packet inspection using signatures and anomaly detection.
+    - Works at Layer 3 and Layer 4.
+    - Can be deployed in passive (IDS) or inline (IPS) mode.
+    - **Vendors:** **Palo Alto**, **Snort**, **Suricata**
+    - **Use Cases:**
+        - Detecting high-severity attacks on multiple machines.
+        - Identifying repeated attacks from a single public IP.
+        - Alerting on new or unknown attack patterns.
+        - Monitoring for lateral movement within the network.
+    - **Fields to investigate:**
+        - `src_ip` / `dst_ip`: IP addresses of attacker and target.
+        - `src_port` / `dst_port`: Ports involved in the detected activity.
+        - `signature_id` / `alert_type`: The rule or signature that triggered the alert.
+        - `severity`: Indicates the criticality of the event.
+        - `protocol`: Network protocol used in the event.
+        - `timestamp`: Time of detection.
+        - `action`: What the IDS/IPS did (alert, block, drop).
+    </details>
+
+- **WAF (Web Application Firewall)**
+    <details>
+    <summary>Expand details</summary>
+    
+    - Protects web applications by filtering and monitoring HTTP/HTTPS traffic.
+    - Blocks common web attacks like SQL injection, cross-site scripting (XSS), and file inclusion.
+    - Works at Layer 7 (Application) of the OSI model.
+    - Can be deployed as a cloud service or on-premises appliance.
+    - **Vendors:** **F5**, **Imperva**, **AWS WAF**
+    - **Use Cases:**
+        - Blocking automated attacks (bots, scanners) targeting web apps.
+        - Preventing exploitation of web application vulnerabilities.
+        - Monitoring for abnormal HTTP request patterns.
+        - Protecting sensitive APIs from abuse.
+    - **Fields to investigate:**
+        - `client_ip`: IP address of the user making the request.
+        - `http_method`: HTTP method used (GET, POST, etc.).
+        - `uri` / `url`: The requested resource or endpoint.
+        - `rule_id` / `attack_type`: The WAF rule or attack type detected.
+        - `status_code`: HTTP response code returned.
+        - `user_agent`: Browser or client making the request.
+        - `timestamp`: When the request was logged.
+    </details>
+
+- **Antivirus / EDR (Endpoint Detection and Response)**
+    <details>
+    <summary>Expand details</summary>
+    
+    - Antivirus scans for and removes malware on endpoints using signature and heuristic analysis.
+    - EDR provides advanced threat detection, investigation, and response capabilities on endpoints.
+    - Supports real-time (on-access) and scheduled (on-demand) scanning.
+    - Can clean, delete, or quarantine malicious files; supports exclusions.
+    - **Vendors:** **Symantec**, **McAfee**, **CrowdStrike**, **SentinelOne**
+    - **Use Cases:**
+        - Responding to malware outbreaks across multiple systems.
+        - Investigating multiple malware detections on a single endpoint.
+        - Detecting when AV/EDR services are stopped or tampered with.
+        - Analyzing suspicious endpoint behavior (e.g., ransomware activity).
+    - **Fields to investigate:**
+        - `hostname` / `endpoint_id`: The affected device or endpoint.
+        - `username`: User logged in during the event.
+        - `malware_name` / `threat_name`: Detected malware or threat.
+        - `file_path`: Location of the suspicious or malicious file.
+        - `action_taken`: What the AV/EDR did (quarantine, delete, block).
+        - `timestamp`: When the detection occurred.
+        - `process_name` / `parent_process`: Process involved in the detection.
+    </details>
+
+- **Proxy**
+    <details>
+    <summary>Expand details</summary>
+    
+    - Acts as an intermediary between users and the internet, filtering web traffic (typically HTTP/HTTPS).
+    - Can enforce content policies, block/allow websites, and anonymize user activity.
+    - Performs NAT to hide internal IPs and may include antivirus scanning for downloads.
+    - Supports web categorization (e.g., social media, adult, news).
+    - **Vendors:** **Forcepoint**, **Blue Coat**, **F5 Networks**
+    - **Use Cases:**
+        - Detecting excessive HTTP requests from a user or device.
+        - Blocking access to malicious or unauthorized websites.
+        - Monitoring for attempts to bypass web restrictions.
+        - Enforcing acceptable use policies.
+    - **Fields to investigate:**
+        - `user`: Username or user ID making the request.
+        - `client_ip`: IP address of the requesting device.
+        - `url` / `domain`: Website or resource accessed.
+        - `http_method`: HTTP method used (GET, POST, etc.).
+        - `category`: Web content category (e.g., social media, news).
+        - `action`: Allowed or blocked by the proxy.
+        - `timestamp`: When the request was made.
+    </details>
+
+- **DLP (Data Loss Prevention)**
+    <details>
+    <summary>Expand details</summary>
+    
+    - Monitors and controls the movement of sensitive data within and outside the organization.
+    - Prevents unauthorized sharing or leakage of confidential information via email, web, or removable media.
+    - Can block, quarantine, or alert on policy violations.
+    - **Vendors:** **Symantec DLP**, **Forcepoint DLP**, **Microsoft Purview**
+    - **Use Cases:**
+        - Detecting attempts to send sensitive data (e.g., credit card numbers) via email.
+        - Blocking uploads of confidential files to cloud storage.
+        - Alerting on large data transfers to external destinations.
+        - Preventing accidental or intentional data exfiltration.
+    - **Fields to investigate:**
+        - `user`: User involved in the data transfer.
+        - `endpoint` / `device`: Device where the event occurred.
+        - `data_type`: Type of sensitive data detected (e.g., PII, PCI).
+        - `action`: What the DLP did (block, allow, alert).
+        - `destination`: Where the data was sent (email, cloud, USB).
+        - `file_name` / `file_path`: Name or location of the file involved.
+        - `timestamp`: When the event was logged.
+    </details>
+
+- **Email Gateway**
+    <details>
+    <summary>Expand details</summary>
+    
+    - Acts as a filter for inbound and outbound emails sent or received by the organization.
+    - Monitors, scans, and enforces policies on email traffic to block spam, phishing, malware, and suspicious content.
+    - Enables SOC to track emails by sender, recipient, subject, and content for threat detection and response.
+    - Supports blocking of specific email IDs, sender domains, subject keywords, and content keywords.
+    - **Vendors:** **ProofPoint**, **Ironport**, **Microsoft O365**, **Symantec**
+    - **Device Product:** EMG (Email Gateway)
+    - **Use Cases:**
+        - Detecting and blocking phishing or spam incidents reported by users.
+        - Identifying malware delivered via email attachments or links.
+        - Investigating users who clicked on suspicious links or opened malicious attachments.
+        - Monitoring large volumes of outbound/inbound emails from a single source.
+        - Flagging emails with suspicious content or subject lines.
+    - **Fields to investigate:**
+        - `date_time`: Date and time of the email event.
+        - `name`: Name of the user or mailbox involved.
+        - `message`: Email message details.
+        - `device_vendor`: Email gateway vendor.
+        - `device_product`: Product name (e.g., EMG).
+        - `email_subject`: Subject of the email.
+        - `email_sender`: Sender's email address.
+        - `email_recipient`: Recipient's email address.
+        - `sender_server_ip`: IP address of the sending server.
+        - `sender_hello_string`: SMTP hello string from sender.
+        - `delivery_location`: Where the email was delivered (e.g., inbox, quarantine).
+        - `status`: Status of the email (delivered, blocked, quarantined).
+        - `links_urls`: URLs/links present in the email.
+        - `attachment_hash`: Hash values of attachments for malware analysis.
+    </details>
+
 - **Firewall**
     - A device or software that monitors and filters incoming and outgoing network traffic based on security rules (ACLs).
     - Works at Layer 3 (Network) and Layer 4 (Transport) of the OSI model.
@@ -476,16 +658,64 @@ _“Firewalls are security guards at the gate, IDS/IPS are surveillance cameras,
         - `links_urls`: URLs/links present in the email.
         - `attachment_hash`: Hash values of attachments for malware analysis.
 
-- **SIEM (Security Information and Event Management)**
-    - Aggregates and analyzes logs from various sources (firewalls, endpoints, servers).
-    - Provides real-time analysis, correlation, and alerting for security incidents.
-    - Centralizes security monitoring and supports incident response.
-    - **Vendors:** **Splunk**, **IBM QRadar**, **LogRhythm**
-    - **Use Cases:**
-        - Correlating alerts from multiple devices to detect coordinated attacks.
-        - Investigating suspicious user behavior across systems.
-        - Detecting policy violations or compliance issues.
-        - Automating incident response workflows.
+| Device | Real World Analogy | Purpose & OSI Layer | Deployment | Use Cases | Key Fields to Investigate | Popular Vendors |
+|--------|--------------------|---------------------|-----------------------------|------------|--------------------------|-----------------|
+| **Firewall** | Like a security guard at a building entrance, checking who can enter or leave. | - Monitors and filters network traffic based on security rules. <br> - Operates at OSI Layer 3 (Network) and Layer 4 (Transport). | - Hardware or software. <br> - Deployed inline with network traffic. | - Detecting too many denied/allowed connections<br>- Blocking traffic from suspicious countries<br>- Monitoring firewall configuration changes<br>- Investigating excessive VPN access failures<br>- Identifying communication with known bad IPs | - Source IP (src_ip)<br>- Destination IP (dst_ip)<br>- Source Port (src_port)<br>- Destination Port (dst_port)<br>- Action (action)<br>- Protocol (protocol)<br>- Rule/Policy ID (rule_id / policy_id)<br>- Timestamp (timestamp)<br>- Interface (interface) | - Palo Alto Networks<br>- Fortinet (FortiGate)<br>- Cisco Firepower<br>- Check Point<br>- Juniper SRX |
+| **IDS/IPS** | Like a security alarm system that detects break-ins (IDS) or automatically locks doors to stop intruders (IPS). | - IDS detects suspicious activity and alerts. <br> - IPS blocks/prevents threats in real time. <br> - Operates at Layer 3 and 4. | - Hardware or software. <br> - IDS is passive. <br> - IPS is deployed inline. | - Detecting high-severity attacks on multiple machines<br>- Identifying repeated attacks from a single public IP<br>- Alerting on new/unknown attack patterns<br>- Monitoring for lateral movement | - Source IP (src_ip)<br>- Destination IP (dst_ip)<br>- Source Port (src_port)<br>- Destination Port (dst_port)<br>- Signature/Alert Type (signature_id / alert_type)<br>- Severity (severity)<br>- Protocol (protocol)<br>- Timestamp (timestamp)<br>- Action (action) | - Palo Alto Networks<br>- Cisco Secure IPS<br>- Fortinet<br>- Trend Micro TippingPoint<br>- Snort<br>- Suricata |
+| **WAF** | Like a bouncer at a club, only letting in guests who follow the rules and blocking troublemakers. | - Protects web applications by filtering HTTP/HTTPS traffic. <br> - Blocks web attacks. <br> - Operates at Layer 7 (Application). | - Cloud service or on-premises appliance. <br> - Deployed inline. | - Blocking automated attacks (bots, scanners)<br>- Preventing exploitation of web vulnerabilities<br>- Monitoring abnormal HTTP requests<br>- Protecting sensitive APIs | - Client IP (client_ip)<br>- HTTP Method (http_method)<br>- URI/URL (uri / url)<br>- Rule/Attack Type (rule_id / attack_type)<br>- Status Code (status_code)<br>- User Agent (user_agent)<br>- Timestamp (timestamp) | - AWS WAF<br>- Cloudflare WAF<br>- Imperva<br>- F5 BIG-IP<br>- Akamai Kona Site Defender |
+| **Antivirus/EDR** | Like a doctor who checks for and treats infections on computers. | - Scans for and removes malware. <br> - EDR detects, investigates, and responds to endpoint threats. <br> - Operates on endpoints. | - Software. <br> - Supports real-time or on-demand scanning. | - Responding to malware outbreaks<br>- Investigating multiple detections on one endpoint<br>- Detecting AV/EDR tampering<br>- Analyzing suspicious endpoint behavior | - Hostname/Endpoint ID (hostname / endpoint_id)<br>- Username (username)<br>- Malware/Threat Name (malware_name / threat_name)<br>- File Path (file_path)<br>- Action Taken (action_taken)<br>- Timestamp (timestamp)<br>- Process/Parent Process (process_name / parent_process) | - CrowdStrike Falcon<br>- SentinelOne<br>- Microsoft Defender for Endpoint<br>- Trellix (formerly McAfee)<br>- Sophos Intercept X |
+| **Proxy** | Like a librarian who checks what books you borrow and makes sure you follow library rules. | - Intermediary filtering web traffic (HTTP/HTTPS). <br> - Enforces content policies and anonymizes users. <br> - Operates at Layer 7. | - Hardware or software. <br> - Deployed inline or as a forward proxy. | - Detecting excessive HTTP requests<br>- Blocking access to malicious/unauthorized sites<br>- Monitoring bypass attempts<br>- Enforcing acceptable use policies | - User (user)<br>- Client IP (client_ip)<br>- URL/Domain (url / domain)<br>- HTTP Method (http_method)<br>- Category (category)<br>- Action (action)<br>- Timestamp (timestamp) | - Zscaler Internet Access<br>- Cisco Umbrella<br>- Forcepoint<br>- Blue Coat (Symantec ProxySG)<br>- Squid Proxy |
+| **DLP** | Like a customs officer checking luggage to prevent smuggling of valuables. | - Monitors and controls movement of sensitive data. <br> - Prevents unauthorized sharing or leakage. <br> - Operates at Layer 7. | - Software or appliance. <br> - Deployed inline or as an endpoint agent. | - Detecting attempts to send sensitive data via email<br>- Blocking uploads to cloud storage<br>- Alerting on large data transfers<br>- Preventing data exfiltration | - User (user)<br>- Endpoint/Device (endpoint / device)<br>- Data Type (data_type)<br>- Action (action)<br>- Destination (destination)<br>- File Name/Path (file_name / file_path)<br>- Timestamp (timestamp) | - Microsoft Purview (DLP)<br>- Forcepoint DLP<br>- Symantec DLP<br>- McAfee DLP<br>- Digital Guardian |
+| **Email Gateway** | Like a mailroom clerk who checks all incoming and outgoing mail for suspicious packages. | - Filters inbound and outbound emails. <br> - Blocks spam, phishing, and malware. <br> - Operates at Layer 7. | - Cloud or on-premises appliance. <br> - Deployed inline with email flow. | - Detecting/blocking phishing or spam<br>- Identifying malware in attachments/links<br>- Investigating suspicious link clicks<br>- Monitoring large email volumes<br>- Flagging suspicious content/subjects | - Date/Time (date_time)<br>- Name (name)<br>- Message (message)<br>- Device Vendor (device_vendor)<br>- Device Product (device_product)<br>- Email Subject (email_subject)<br>- Email Sender (email_sender)<br>- Email Recipient (email_recipient)<br>- Sender Server IP (sender_server_ip)<br>- Sender Hello String (sender_hello_string)<br>- Delivery Location (delivery_location)<br>- Status (status)<br>- Links/URLs (links_urls)<br>- Attachment Hash (attachment_hash) | - Microsoft Defender for Office 365<br>- Proofpoint<br>- Mimecast<br>- Cisco Secure Email (Ironport)<br>- Barracuda |
+| **SIEM** | Like a central command center that collects and analyzes security data from various sources. | - Aggregates and analyzes logs from multiple devices. <br> - Provides real-time monitoring and alerting. <br> - Operates across all OSI layers. | - Software or cloud service. <br> - Deployed centrally. | - Correlating events from different sources<br>- Detecting complex attack patterns<br>- Generating compliance reports<br>- Investigating security incidents | - Log Source (log_source)<br>- Event Type (event_type)<br>- Severity (severity)<br>- Timestamp (timestamp)<br>- User (user)<br>- Source IP (src_ip)<br>- Destination IP (dst_ip)<br>- Action (action) | - Splunk<br>- IBM QRadar<br>- ArcSight<br>- LogRhythm<br>- Microsoft Sentinel |
+
+### Key Fields to Investigate (with Explanations)
+
+- **Source IP (src_ip):** Identifies the origin of network traffic, useful for tracing attackers or compromised devices.
+- **Destination IP (dst_ip):** Shows the target of network traffic, helping pinpoint attack victims or data exfiltration endpoints.
+- **Source Port (src_port):** Indicates the originating application/service on the source device, aiding in protocol and threat identification.
+- **Destination Port (dst_port):** Reveals the intended service on the destination device, useful for detecting unauthorized access attempts.
+- **Action (action):** Records what the device did (allowed, blocked, alerted), critical for understanding response to threats.
+- **Protocol (protocol):** Specifies the network protocol used, helping classify traffic and spot protocol-based attacks.
+- **Rule/Policy ID (rule_id / policy_id):** Identifies which security rule triggered, useful for tuning and investigating policy effectiveness.
+- **Timestamp (timestamp):** Provides the exact time of the event, essential for correlating incidents and building timelines.
+- **Interface (interface):** Shows which network interface handled the traffic, aiding in network segmentation and device tracking.
+- **Signature/Alert Type (signature_id / alert_type):** Details the specific threat detected, helping prioritize and respond to alerts.
+- **Severity (severity):** Indicates the criticality of the event, guiding incident response prioritization.
+- **Client IP (client_ip):** Identifies the user’s device in web or proxy logs, useful for tracking user activity.
+- **HTTP Method (http_method):** Shows the type of web request (GET, POST, etc.), helping spot abnormal or malicious requests.
+- **URI/URL (uri / url):** Specifies the accessed resource, useful for investigating targeted attacks or data leaks.
+- **Status Code (status_code):** Indicates the result of a web request, helping detect failed or suspicious transactions.
+- **User Agent (user_agent):** Reveals the software making the request, useful for identifying bots or unusual clients.
+- **Hostname/Endpoint ID (hostname / endpoint_id):** Identifies the affected endpoint, crucial for incident containment.
+- **Username (username):** Shows which user was involved, aiding in insider threat and account compromise investigations.
+- **Malware/Threat Name (malware_name / threat_name):** Specifies the detected threat, guiding remediation and threat hunting.
+- **File Path (file_path):** Indicates the location of suspicious files, useful for forensic analysis.
+- **Action Taken (action_taken):** Records the response to a threat (quarantined, deleted, etc.), important for verifying remediation.
+- **Process/Parent Process (process_name / parent_process):** Shows which processes were involved, aiding in root cause analysis.
+- **User (user):** Identifies the person or account involved, useful for tracking activity and investigating policy violations.
+- **URL/Domain (url / domain):** Specifies the web resource accessed, helping detect access to malicious or unauthorized sites.
+- **Category (category):** Classifies the type of web content, useful for policy enforcement and threat detection.
+- **Endpoint/Device (endpoint / device):** Identifies the device involved, aiding in asset management and incident response.
+- **Data Type (data_type):** Specifies the kind of sensitive data, helping detect and prevent data leakage.
+- **Destination (destination):** Shows where data or traffic was sent, useful for tracking exfiltration attempts.
+- **File Name/Path (file_name / file_path):** Indicates the file involved in a data event, aiding in forensic investigations.
+- **Date/Time (date_time):** Records when an email event occurred, essential for timeline reconstruction.
+- **Name (name):** Identifies the sender or recipient, useful for tracking suspicious communications.
+- **Message (message):** Contains the email content, aiding in phishing and malware investigations.
+- **Device Vendor (device_vendor):** Shows the manufacturer, useful for understanding device capabilities and vulnerabilities.
+- **Device Product (device_product):** Specifies the product, aiding in targeted investigations and support.
+- **Email Subject (email_subject):** Reveals the topic of the email, useful for detecting phishing or suspicious content.
+- **Email Sender (email_sender):** Identifies who sent the email, aiding in source verification.
+- **Email Recipient (email_recipient):** Shows who received the email, useful for impact assessment.
+- **Sender Server IP (sender_server_ip):** Indicates the mail server’s IP, helping trace email origins.
+- **Sender Hello String (sender_hello_string):** Provides SMTP handshake info, useful for detecting spoofing attempts.
+- **Delivery Location (delivery_location):** Shows where the email was delivered, aiding in tracking message flow.
+- **Status (status):** Indicates the result of email processing, useful for identifying blocked or failed deliveries.
+- **Links/URLs (links_urls):** Lists URLs in emails, helping detect phishing or malicious links.
+- **Attachment Hash (attachment_hash):** Provides a unique identifier for attachments, useful for malware detection and tracking.
+- **Log Source (log_source):** Identifies where the log originated, aiding in event correlation.
+- **Event Type (event_type):** Specifies the nature of the event, helping classify and prioritize investigations.
 
 
 **SOC Relevance:**
@@ -726,3 +956,4 @@ Reference: [TeleDynamics ](https://info.teledynamics.com/blog/dhcp-options-for-v
 ## ✅ Summary
 
 Today’s concepts help you understand how devices communicate and how threats can be detected by analyzing network behavior. As a SOC analyst, mastering IP addressing and protocols is key to identifying suspicious activity and protecting the organization.
+
